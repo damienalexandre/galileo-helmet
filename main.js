@@ -69,7 +69,6 @@ function mainLoop()
         lights.write(0);
     }
     
-    currentSignal = turnSignalLeft;
     displayTurnSignal(currentSignal);
     
     var touchPressedRight = touchButtonRight.read();
