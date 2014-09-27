@@ -14,6 +14,7 @@ Wire
 - 2 buzzer on D3 and D6 (important!)
 - LED on D2
 - temp buttons on D8 and D7
+- transistor pin for turn signal LEDs: pin 12 and 11 (from arduino)
 
 Setup
 -----

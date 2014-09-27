@@ -19,6 +19,16 @@ lights.dir(mraa.DIR_OUT);
 // Light sensor
 var lightSensor = new mraa.Aio(0);
 
+// Turn signals
+var turnSignalLeft = new mraa.Gpio(12);
+turnSignalLeft.dir(mraa.DIR_OUT);
+
+var turnSignalRight = new mraa.Gpio(11);
+turnSignalRight.dir(mraa.DIR_OUT);
+
+var currentSignal = null;
+var turnSignalInterval = null;
+
 // Test buttons to remove later
 var testButton = new mraa.Gpio(7);
 testButton.dir(mraa.DIR_IN);
@@ -30,21 +40,16 @@ mainLoop(); //called periodicaly
 
 console.log("Welcome to super helmet");
 
-// Test accell
-var lsm303 = require('lsm303');
-//var ls  = new lsm303();
-//var accel = ls.accelerometer({address: 0x19, device: "/dev/yolo"});
-
 function mainLoop()
 {
     var isPressed1 =  testButton.read();
     if (isPressed1) {
-        pleaseTurnSignal(buzzerLeft);
+        pleaseTurnDuuuuude(buzzerLeft);
     }
     
     var isPressed2 =  testButton2.read();
     if (isPressed2) {
-        pleaseTurnSignal(buzzerRight);
+        pleaseTurnDuuuuude(buzzerRight);
     }
     
     if (lightSensor.read() < 1000) {
@@ -54,10 +59,13 @@ function mainLoop()
         lights.write(0);
     }
     
+    currentSignal = turnSignalLeft;
+    displayTurnSignal(currentSignal);
+    
     setTimeout(mainLoop, 100);
 }
 
-function pleaseTurnSignal(buzzer)
+function pleaseTurnDuuuuude(buzzer)
 {
     console.log('Start sound');
     buzzer.write(0.8);
@@ -77,6 +85,35 @@ function pleaseTurnSignal(buzzer)
             }, 50);
         }, 60);
     }, 50);
+}
+
+function displayTurnSignal()
+{
+    if (!currentSignal) {
+        if (turnSignalInterval) {
+            clearInterval(turnSignalInterval);
+            turnSignalInterval = null;
+        }
+        return;
+    }
+    
+    if (turnSignalInterval) {
+        // already running, exit
+        return;
+    }
+    
+    var isLighted = true;
+    turnSignalInterval = setInterval(function() {
+        // Sound
+        buzzerRight.write(isLighted ? 0.2 : 0.4);
+        setTimeout(function() {
+            buzzerRight.write(0);
+        }, 5);
+        
+        // Light :)
+        currentSignal.write(isLighted ? 1 : 0);
+        isLighted = !isLighted;
+    }, 600);
 }
 
 console.log("\n\n\n&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;$\"&nbsp;&nbsp;&nbsp;*.&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;\n&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;d$$$$$$$P\"&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;$&nbsp;&nbsp;&nbsp;&nbsp;J\n&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;^$.&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;4r&nbsp;&nbsp;\"\n&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;d\"b&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;.db\n&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;P&nbsp;&nbsp;&nbsp;$&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;e\"&nbsp;$\n&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;..ec..&nbsp;.\"&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;*.&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;zP&nbsp;&nbsp;&nbsp;$.zec..\n&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;.^&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;3*b.&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;*.&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;.P\"&nbsp;.@\"4F&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;\"4\n&nbsp;&nbsp;&nbsp;.\"&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;d\"&nbsp;&nbsp;^b.&nbsp;&nbsp;&nbsp;&nbsp;*c&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;.$\"&nbsp;&nbsp;d\"&nbsp;&nbsp;&nbsp;$&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;%\n&nbsp;&nbsp;/&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;P&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;$.&nbsp;&nbsp;&nbsp;&nbsp;\"c&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;d\"&nbsp;&nbsp;&nbsp;@&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;3r&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;3\n&nbsp;4&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;.eE........$r===e$$$$eeP&nbsp;&nbsp;&nbsp;&nbsp;J&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;*..&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;b\n&nbsp;$&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;$$$$$&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;$&nbsp;&nbsp;&nbsp;4$$$$$$$&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;F&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;d$$$.&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;4\n&nbsp;$&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;$$$$$&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;$&nbsp;&nbsp;&nbsp;4$$$$$$$&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;L&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;*$$$\"&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;4\n&nbsp;4&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;\"&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;\"\"3P&nbsp;===$$$$$$\"&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;3&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;P\n&nbsp;&nbsp;*&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;$&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;\"\"\"&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;b&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;J\n&nbsp;&nbsp;&nbsp;\".&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;.P&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;%.&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;@\n&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;%.&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;z*\"&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;^%.&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;.r\"\n&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;\"*==*\"\"&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;^\"*==*\"\"&nbsp;&nbsp;&nbsp;Gilo94'\n\n");
