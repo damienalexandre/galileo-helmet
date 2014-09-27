@@ -1,26 +1,60 @@
-//Type Node.js Here :)
-
-/*
-A simple node.js application intended to blink the onboard LED on the Intel based development boards such as the Intel(R) Galileo and Edison with Arduino breakout board.
-
-MRAA - Low Level Skeleton Library for Communication on GNU/Linux platforms
-Library in C/C++ to interface with Galileo & other Intel platforms, in a structured and sane API with port nanmes/numbering that match boards & with bindings to javascript & python.
-
-The intent is to make it easier for developers and sensor manufacturers to map their sensors & actuators on top of supported hardware and to allow control of low level communication protocol by high level languages & constructs.
-*/
-
 var mraa = require('mraa'); //require mraa
 console.log('MRAA Version: ' + mraa.getVersion()); //write the mraa version to the Intel XDK console
 
-var myOnboardLed = new mraa.Gpio(13); //LED hooked up to digital pin 13 (or built in pin on Galileo Gen1 & Gen2)
-myOnboardLed.dir(mraa.DIR_OUT); //set the gpio direction to output
-var ledState = true; //Boolean to hold the state of Led
 
-periodicActivity(); //call the periodicActivity function
+// Buzzers
+var buzzerLeft = new mraa.Pwm(3, -1, false);
+buzzerLeft.period_us(2000);
+buzzerLeft.enable(true);
 
-function periodicActivity()
+var buzzerRight = new mraa.Pwm(6, -1, false);
+buzzerRight.period_us(2000);
+buzzerRight.enable(true);
+
+// Test buttons
+var testButton = new mraa.Gpio(7);
+testButton.dir(mraa.DIR_IN);
+
+var testButton2 = new mraa.Gpio(8);
+testButton2.dir(mraa.DIR_IN);
+
+mainLoop(); //called periodicaly
+
+console.log("Welcome to super helmet");
+
+function mainLoop()
 {
-  myOnboardLed.write(ledState?1:0); //if ledState is true then write a '1' (high) otherwise write a '0' (low)
-  ledState = !ledState; //invert the ledState
-  setTimeout(periodicActivity, 200); //call the indicated function after 1 second (1000 milliseconds)
+    var isPressed1 =  testButton.read();
+    if (isPressed1) {
+        pleaseTurnSignal(buzzerLeft);
+    }
+    
+    var isPressed2 =  testButton2.read();
+    if (isPressed2) {
+        pleaseTurnSignal(buzzerRight);
+    }
+    
+    setTimeout(mainLoop, 100);
+}
+
+function pleaseTurnSignal(buzzer)
+{
+    console.log('Start sound');
+    buzzer.write(1);
+    
+    setTimeout(function() {
+        buzzer.write(0);
+
+        setTimeout(function() {
+            buzzer.write(0.4);
+
+            setTimeout(function() {
+                buzzer.write(1);
+
+                setTimeout(function() {
+                    buzzer.write(0);
+                }, 100);
+            }, 50);
+        }, 100);
+    }, 20);
 }
