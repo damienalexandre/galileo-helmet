@@ -19,13 +19,6 @@ lights.dir(mraa.DIR_OUT);
 // Light sensor
 var lightSensor = new mraa.Aio(0);
 
-// Tilt socket
-var tiltSocket = new net.Socket({ fd: null
-  allowHalfOpen: false,
-  readable: false,
-  writable: false
-});
-
 // Test buttons to remove later
 var testButton = new mraa.Gpio(7);
 testButton.dir(mraa.DIR_IN);
