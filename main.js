@@ -119,13 +119,7 @@ function pleaseTurnDuuuuude(buzzer)
 
 function displayTurnSignal()
 {
-    if (!currentSignal) {
-        if (turnSignalInterval) {
-            clearInterval(turnSignalInterval);
-            turnSignalInterval = null;
-        }
-        return;
-    }
+    
     
     if (turnSignalInterval) {
         // already running, exit
@@ -134,6 +128,15 @@ function displayTurnSignal()
     
     var isLighted = true;
     turnSignalInterval = setInterval(function() {
+        if (!currentSignal) {
+        if (turnSignalInterval) {
+            clearInterval(turnSignalInterval);
+            turnSignalInterval = null;
+        }
+        turnSignalLeft.write(0);
+        turnSignalRight.write(0);
+        return;
+    }
         // Sound
         buzzerRight.write(isLighted ? 0.2 : 0.4);
         setTimeout(function() {
