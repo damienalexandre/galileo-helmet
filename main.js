@@ -37,6 +37,11 @@ mainLoop(); //called periodicaly
 
 console.log("Welcome to super helmet");
 
+// Test accell
+var lsm303 = require('lsm303');
+var ls  = new lsm303();
+var accel = ls.accelerometer({address: 0x19, device: "/dev/yolo"});
+
 function mainLoop()
 {
     var isPressed1 =  testButton.read();
