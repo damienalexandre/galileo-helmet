@@ -15,6 +15,7 @@ Wire
 - LED on D2
 - temp buttons on D8 and D7
 - transistor pin for turn signal LEDs: pin 12 and 11 (from arduino)
+- 2 touch sensors on D4 and D5
 
 Setup
 -----
