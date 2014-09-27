@@ -36,6 +36,16 @@ testButton.dir(mraa.DIR_IN);
 var testButton2 = new mraa.Gpio(8);
 testButton2.dir(mraa.DIR_IN);
 
+var touchButtonRight = new mraa.Gpio(4);
+touchButtonRight.dir(mraa.DIR_IN);
+
+var touchButtonLeft = new mraa.Gpio(5);
+touchButtonLeft.dir(mraa.DIR_IN);
+
+var isRightTouchPressed = 0;
+var isLeftTouchPressed = 0;
+
+
 mainLoop(); //called periodicaly
 
 console.log("Welcome to super helmet");
@@ -61,6 +71,27 @@ function mainLoop()
     
     currentSignal = turnSignalLeft;
     displayTurnSignal(currentSignal);
+    
+    var touchPressedRight = touchButtonRight.read();
+    if(touchPressedRight && !isRightTouchPressed) {
+		if(currentSignal == null || currentSignal == turnSignalRight) {
+			currentSignal = turnSignalRight;
+		} else {
+			currentSignal = null;
+		}
+	}
+    isRightTouchPressed = touchPressedRight;
+    
+    var touchPressedLeft = touchButtonLeft.read();
+    if(touchPressedLeft && !isLeftTouchPressed) {
+        if(currentSignal == null || currentSignal == turnSignalLeft) {
+			currentSignal = turnSignalLeft;
+		} else {
+			currentSignal = null;
+		}
+    }
+    isLeftTouchPressed = touchPressedLeft;
+    
     
     setTimeout(mainLoop, 100);
 }
