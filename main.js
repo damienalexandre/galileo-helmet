@@ -11,6 +11,14 @@ var buzzerRight = new mraa.Pwm(6, -1, false);
 buzzerRight.period_us(2000);
 buzzerRight.enable(true);
 
+// Lights!
+var lights = new mraa.Gpio(2); // @todo switch to a relay
+lights.dir(mraa.DIR_OUT);
+
+// Light sensor
+var lightSensor = new mraa.Aio(0);
+
+
 // Test buttons
 var testButton = new mraa.Gpio(7);
 testButton.dir(mraa.DIR_IN);
@@ -34,6 +42,12 @@ function mainLoop()
         pleaseTurnSignal(buzzerRight);
     }
     
+    if (lightSensor.read() < 1000) {
+        lights.write(1);
+    } else {
+        lights.write(0);
+    }
+
     setTimeout(mainLoop, 100);
 }
 
