@@ -7,6 +7,14 @@ Requirements
 - Galileo gen 2
 - Wifi extension
 
+Wire
+----
+
+- light sensor on A0
+- 2 buzzer on D3 and D6 (important!)
+- LED on D2
+- temp buttons on D8 and D7
+
 Setup
 -----
 

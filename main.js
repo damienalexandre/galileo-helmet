@@ -48,6 +48,7 @@ function mainLoop()
     }
     
     if (lightSensor.read() < 1000) {
+        console.log('Start light');
         lights.write(1);
     } else {
         lights.write(0);
