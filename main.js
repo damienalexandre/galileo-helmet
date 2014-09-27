@@ -1,6 +1,7 @@
 var mraa = require('mraa'); //require mraa
-console.log('MRAA Version: ' + mraa.getVersion()); //write the mraa version to the Intel XDK console
+var net = require('net');
 
+console.log('MRAA Version: ' + mraa.getVersion()); //write the mraa version to the Intel XDK console
 
 // Buzzers
 var buzzerLeft = new mraa.Pwm(3, -1, false);
@@ -18,8 +19,14 @@ lights.dir(mraa.DIR_OUT);
 // Light sensor
 var lightSensor = new mraa.Aio(0);
 
+// Tilt socket
+var tiltSocket = new net.Socket({ fd: null
+  allowHalfOpen: false,
+  readable: false,
+  writable: false
+});
 
-// Test buttons
+// Test buttons to remove later
 var testButton = new mraa.Gpio(7);
 testButton.dir(mraa.DIR_IN);
 
@@ -47,28 +54,28 @@ function mainLoop()
     } else {
         lights.write(0);
     }
-
+    
     setTimeout(mainLoop, 100);
 }
 
 function pleaseTurnSignal(buzzer)
 {
     console.log('Start sound');
-    buzzer.write(1);
+    buzzer.write(0.8);
     
     setTimeout(function() {
-        buzzer.write(0);
+        buzzer.write(0.2);
 
         setTimeout(function() {
             buzzer.write(0.4);
 
             setTimeout(function() {
-                buzzer.write(1);
+                buzzer.write(0.6);
 
                 setTimeout(function() {
                     buzzer.write(0);
-                }, 100);
+                }, 50);
             }, 50);
-        }, 100);
-    }, 20);
+        }, 60);
+    }, 50);
 }
