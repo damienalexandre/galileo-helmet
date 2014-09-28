@@ -1,5 +1,7 @@
-galileo-helmet
-==============
+Happy Cycler
+============
+
+Intel Galileo powered bike helmet, done in 2 days at [IoT Roadshow](https://www.hackerleague.org/hackathons/intel-r-iot-roadshow-paris/hacks/happy-cycler).
 
 Requirements
 ------------
@@ -11,7 +13,7 @@ Wire
 ----
 
 - light sensor on A0
-- 2 buzzer on D3 and D6 (important!)
+- 2 buzzer on D3 and D6 (important, PWM!)
 - LED on D2
 - temp buttons on D8 and D7
 - transistor pin for turn signal LEDs: pin 12 and 11 (from arduino)
