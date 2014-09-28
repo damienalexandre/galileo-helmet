@@ -170,9 +170,11 @@ http.createServer(function (req, res) {
   switch(req.url) {
     case '/navigate?left':
           pleaseTurnDuuuuude(buzzerLeft);
+          currentSignal = turnSignalLeft;
           break;
     case '/navigate?right':
           pleaseTurnDuuuuude(buzzerRight);
+          currentSignal = turnSignalRight;
           break;
     default:
         res.writeHead(400, {'Content-Type': 'text/plain'});
