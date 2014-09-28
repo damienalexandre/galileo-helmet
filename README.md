@@ -41,3 +41,8 @@ The wifi network "Helmet" is now available.
 Check you have opkg install libmraa0:
 
     opkg install libmraa0
+
+Pics
+----
+
+[Front light](http://i.imgur.com/4b453gb.jpg) / [Turn signal](http://i.imgur.com/tmOEowx) / [The inside](http://i.imgur.com/BcM5ayB.jpg)
