@@ -176,6 +176,9 @@ http.createServer(function (req, res) {
           pleaseTurnDuuuuude(buzzerRight);
           currentSignal = turnSignalRight;
           break;
+    case '/navigate?stop':
+          currentSignal = null;
+          break;
     default:
         res.writeHead(400, {'Content-Type': 'text/plain'});
         res.end('Dafuq!\n');
