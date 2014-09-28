@@ -46,6 +46,18 @@ var isRightTouchPressed = 0;
 var isLeftTouchPressed = 0;
 
 
+// I2C stuff
+var wire = new Wire(/*device*/'dev/i2c-1', /*address*/32);
+
+wire.read(/*register*/0x00, function(err, value) {
+    if (err) throw err;
+    console.log('Read value', value);
+});
+wire.write(/*register*/0x00, /*value*/0xFF, function(err) {
+    if (err) throw err;
+});
+
+
 mainLoop(); //called periodicaly
 
 console.log("Welcome to super helmet");
