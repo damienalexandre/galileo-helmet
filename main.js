@@ -47,7 +47,7 @@ var isLeftTouchPressed = 0;
 
 
 // I2C stuff
-var wire = new Wire(/*device*/'dev/i2c-1', /*address*/32);
+var wire = new Wire(/*device*/'/dev/i2c-1', /*address*/32);
 
 wire.read(/*register*/0x00, function(err, value) {
     if (err) throw err;
